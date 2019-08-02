@@ -1,0 +1,159 @@
+﻿@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<script src="~/Scripts/jquery-1.10.2.js"></script>
+
+<table id="tab1" border="1">
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Father Name</th>
+    </tr>
+
+
+
+
+</table>
+
+<hr />
+ID: <input type="text" id="id" />
+<br />
+Name: <input type="text" id="nam" />
+<br />
+
+Father Name: <input type="text" id="fnam" />
+<br />
+
+<input type="button" id="addbtn" value="Add Emp" />
+<input type="button" id="delbtn" value="Delete" />
+<input type="button" id="updbtn" value="Update" />
+
+<script>
+    $.getJSON("/api/TableNames/", function (data) {
+        $.each(data, function (key, val) {
+            $("<tr><td>" + val.id + "</td ><td>" + val.name + "</td >" + "<td>" + val.fname + "</td ></tr>").appendTo("#tab1")
+        })
+    })
+
+
+    $("#delbtn").click(function () {
+
+        var id = $("#id").val();
+        alert(id)
+
+
+        $.ajax({
+            type:'DELETE',
+            url: "/api/TableNames/" + id,
+            contentType: "application/json;charset=utf-8",
+            data: JSON.stringify({
+
+                name:$("#id").val(),
+            }),
+            dataType: 'JSON',
+            success: function (data) {
+                $("#tab1").find("tr:gt(0)").remove();
+
+                $.getJSON("/api/TableNames/", function (data) {
+
+
+                    $.each(data, function(key, val){
+
+
+                        $("<tr><td>" + val.id + "</td ><td>" + val.name + "</td >" + "<td>" + val.fname + "</td ></tr>").appendTo("#tab1")
+
+
+                    })
+
+
+                })
+
+
+
+            }
+
+
+        })
+
+
+
+    })
+
+
+    $("#updbtn").click(function () {
+    
+
+        var id = $("#id").val();
+        var name = $("#nam").val();
+        var fname = $("#fnam").val();
+
+
+        $.ajax({
+            type: 'PUT',
+            dataType: "JSON",
+            url: "/api/TableNames/" + id,
+            contentType: "application/json;charset=utf-8",
+            data: JSON.stringify({
+
+                id: $("#id").val(),
+                name: $("#nam").val(),
+                fname: $("#fnam").val(),
+            }),
+            success: function (data) {
+                $("#tab1").find("tr:gt(0)").remove();
+
+                $.getJSON("/api/TableNames/",
+                    function (data)
+                    {
+                        $.each(data, function (key, val) {
+                            $("<tr><td>" + val.id + "</td ><td>" + val.name + "</td >" + "<td>" + val.fname + "</td ></tr>").appendTo("#tab1")
+                        })
+                    })
+            }
+        })
+        })
+
+
+
+
+
+    $("#addbtn").click(function () {
+
+        var name = $("#nam").val();
+        var fname = $("#fnam").val();
+
+        $.ajax({
+
+            type: "post",
+            contentType: 'application/json;charset=utf-8',
+            dataType: "JSON",
+            url:"/api/TableNames/",
+            data: JSON.stringify({
+
+                name: $("#nam").val(),
+                fname: $("#fnam").val(),
+            }),
+
+            success: function (data) {
+                $("#tab1").find("tr:gt(0)").remove();
+
+                $.getJSON("/api/TableNames/",
+                    function (data) {
+                        $.each(data, function (key, val) {
+                            $("<tr><td>" + val.id + "</td ><td>" + val.name + "</td >" + "<td>" + val.fname + "</td ></tr>").appendTo("#tab1")
+                        })
+                    })
+            }
+
+        })
+
+
+    })
+
+
+
+
+</script>

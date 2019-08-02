@@ -1,0 +1,3 @@
+Create a DB in sql connect it with name MYDB
+create a table with name : Table
+id,name,fname
